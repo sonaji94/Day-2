@@ -1,3 +1,7 @@
+# Student Result Analyzer
+# Author: Sonu
+# Day 2 Project
+
 import pandas as pd
 import matplotlib.pyplot as plt
 
