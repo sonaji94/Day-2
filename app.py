@@ -1,35 +1,24 @@
-# Student Result Analyzer
-# Author: Sonu
-# Day 2 Project
+import requests
 
-import pandas as pd
-import matplotlib.pyplot as plt
+API_KEY = "YOUR_API_KEY_HERE"
 
-# Load data
-data = pd.read_csv("students.csv")
+city = input("Enter city name: ")
 
-# Calculate total and average
-data["Total"] = data[["Maths", "Physics", "Chemistry"]].sum(axis=1)
-data["Average"] = data["Total"] / 3
+url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
 
-# Pass / Fail
-data["Result"] = data["Average"].apply(lambda x: "Pass" if x >= 40 else "Fail")
+response = requests.get(url)
+data = response.json()
 
-# Display results
-print("\nStudent Results:\n")
-print(data)
+if data["cod"] != 200:
+    print("City not found!")
+else:
+    temp = data["main"]["temp"]
+    humidity = data["main"]["humidity"]
+    condition = data["weather"][0]["description"]
 
-# Topper
-topper = data.loc[data["Total"].idxmax()]
-print("\nTopper:")
-print(topper[["Name", "Total"]])
-
-# Subject-wise average
-subject_avg = data[["Maths", "Physics", "Chemistry"]].mean()
-
-# Plot
-subject_avg.plot(kind="bar", title="Subject-wise Average Marks")
-plt.xlabel("Subject")
-plt.ylabel("Average Marks")
-plt.tight_layout()
-plt.show()
+    print("\nWeather Report")
+    print("------------------")
+    print(f"City: {city}")
+    print(f"Temperature: {temp} °C")
+    print(f"Humidity: {humidity}%")
+    print(f"Condition: {condition.capitalize()}")
